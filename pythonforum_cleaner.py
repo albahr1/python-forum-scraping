@@ -8,13 +8,6 @@ LOGIN_FILE = "login.json"
 LOGIN_URL = "http://python-forum.org/ucp.php?mode=login"
 IP_BAN_URL = "http://python-forum.org/mcp.php?i=ban&mode=ip"
 
-def main():
-    br = Browser()
-    login(br)
-
-    banned, dupes = get_banned(br)
-    print_banned_stats(banned, dupes)
-
 def login(br):
     br.open(LOGIN_URL)
     br.select_form(nr=1)
@@ -59,4 +52,5 @@ def expand(pat):
                 yield expanded
 
 if __name__ == "__main__":
-    main()
+    br = Browser()
+    login(br)
