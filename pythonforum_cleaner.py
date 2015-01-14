@@ -1,5 +1,5 @@
 import json
-from itertools import chain
+from itertools import chain, count
 
 from mechanize import Browser
 
@@ -7,6 +7,7 @@ LOGIN_FILE = "login.json"
 
 LOGIN_URL = "http://python-forum.org/ucp.php?mode=login"
 IP_BAN_URL = "http://python-forum.org/mcp.php?i=ban&mode=ip"
+MEMBERLIST_URL = "http://python-forum.org/memberlist.php?start={}"
 
 def login(br):
     br.open(LOGIN_URL)
@@ -50,6 +51,12 @@ def expand(pat):
         for x in xrange(256):
             for expanded in expand(template.format(x)):
                 yield expanded
+
+def get_members(br):
+    for offset in count(0, 25):
+        resp = br.open(MEMBERLIST_URL.format(offset))
+        if 'No members found for this search criterion.' in resp.read():
+            break
 
 if __name__ == "__main__":
     br = Browser()
