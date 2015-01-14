@@ -10,6 +10,12 @@ IP_BAN_URL = "http://python-forum.org/mcp.php?i=ban&mode=ip"
 
 def main():
     br = Browser()
+    login(br)
+
+    banned, dupes = get_banned(br)
+    print_banned_stats(banned, dupes)
+
+def login(br):
     br.open(LOGIN_URL)
     br.select_form(nr=1)
 
@@ -20,6 +26,8 @@ def main():
 
     br.submit()
 
+def get_banned(br):
+    'return tuple (banned, duplicates) where both are sets'
     br.open(IP_BAN_URL)
 
     items = list(br.forms())[1].controls[-3].get_items()
@@ -35,6 +43,11 @@ def main():
 
     return (banned, dupes)
 
+def print_banned_stats(banned, dupes):
+    print 'Total banned IPs:', len(banned)
+    print 'Percent of IPv4 addresses: {:.3f}%'.format(len(banned) * 100.0 / 2**32)
+    print 'Total duplicate entries:', len(dupes)
+
 def expand(pat):
     "expand an IP address string with wild cards, e.g. 10.0.0.* -> [10.0.0.0, 10.0.0.1, ..., 10.0.0.255]"
     if '*' not in pat:
@@ -46,8 +59,4 @@ def expand(pat):
                 yield expanded
 
 if __name__ == "__main__":
-    banned, dupes = main()
-
-    print 'Total banned IPs:', len(banned)
-    print 'Percent of IPv4 addresses: {:.3f}%'.format(len(banned) * 100.0 / 2**32)
-    print 'Total duplicate entries:', len(dupes)
+    main()
