@@ -53,11 +53,16 @@ def expand(pat):
             for expanded in expand(template.format(x)):
                 yield expanded
 
-def get_members(br):
+def get_members_ids(br):
+    'generator, which will do i/o between calls'
     for offset in count(0, 25):
         resp = br.open(NEW_REGSITERED_MEMBERS_URL.format(offset))
         if 'No members found for this search criterion.' in resp.read():
             break
+
+        for link in br.links():
+            if link.url.startswith('./memberlist.php?mode=viewprofile&u='):
+                yield link.url.split('=')[-1]
 
 if __name__ == "__main__":
     br = Browser()
