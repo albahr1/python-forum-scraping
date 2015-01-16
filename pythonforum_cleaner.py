@@ -7,7 +7,8 @@ LOGIN_FILE = "login.json"
 
 LOGIN_URL = "http://python-forum.org/ucp.php?mode=login"
 IP_BAN_URL = "http://python-forum.org/mcp.php?i=ban&mode=ip"
-MEMBERLIST_URL = "http://python-forum.org/memberlist.php?start={}"
+NEW_REGSITERED_MEMBERS_URL = "http://python-forum.org/memberlist.php?start={}&g=7"
+PROFILE_URL = "http://python-forum.org/memberlist.php?mode=viewprofile&u={}"
 
 def login(br):
     br.open(LOGIN_URL)
@@ -54,7 +55,7 @@ def expand(pat):
 
 def get_members(br):
     for offset in count(0, 25):
-        resp = br.open(MEMBERLIST_URL.format(offset))
+        resp = br.open(NEW_REGSITERED_MEMBERS_URL.format(offset))
         if 'No members found for this search criterion.' in resp.read():
             break
 
