@@ -84,7 +84,7 @@ class ForumAutomation:
 
         self.br.submit()
 
-    def backup(self, filename=None):
+    def backup(self, filename=None, verbose=False):
         "login and admin_login are expected to be called first"
 
         self.go_to_admin_control_panel()
@@ -109,14 +109,21 @@ class ForumAutomation:
         self.br[constants.WHERE] = [constants.DOWNLOAD]
         self.br[constants.TABLE] = constants.ALL_TABLES
 
-        print "  Submitting form..."
+        if verbose:
+            print "  Submitting form..."
+
         resp = self.br.submit()
         if filename is None:
             filename = resp.info().plist[0].split('="')[-1].strip("'\"")
-        print "  Downloading file..."
+
+        if verbose:
+            print "  Downloading file..."
+
         with open(filename, "wb") as backup:
             backup.write(resp.get_data())
-        print "  Saved", filename
+
+        if verbose:
+            print "  Saved", filename
 
 def print_banned_stats(banned, dupes):
     print "Total banned IPs:", len(banned)
