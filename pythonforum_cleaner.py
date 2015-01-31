@@ -1,6 +1,7 @@
 import sys
 import json
 from itertools import chain, count
+from getpass import getpass
 
 from mechanize import Browser
 
@@ -133,10 +134,14 @@ def expand(pat):
                 yield expanded
 
 if __name__ == "__main__":
-    with open(sys.argv[1]) as login_file:
-        credentials = json.load(login_file)
-        username = credentials[constants.USERNAME]
-        password = credentials[constants.PASSWORD]
+    if len(sys.argv) == 2:
+        with open(sys.argv[1]) as login_file:
+            credentials = json.load(login_file)
+            username = credentials[constants.USERNAME]
+            password = credentials[constants.PASSWORD]
+    else:
+        username = raw_input("Username: ")
+        password = getpass()
 
     forum = ForumAutomation(username, password)
 
